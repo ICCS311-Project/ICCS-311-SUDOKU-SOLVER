@@ -3,7 +3,7 @@ use std::io;
 use std::io::*;
 
 
-fn is_save(mut grid: &Vec<Vec<u64>>, num: u64, row: usize, col: usize) -> bool{
+fn is_save(mut grid: &Vec<Vec<u32>>, num: u32, row: usize, col: usize) -> bool{
     let size = grid[0].len();
     for i in 0..=size{
         if grid[row][i] == num{
@@ -33,7 +33,7 @@ fn is_save(mut grid: &Vec<Vec<u64>>, num: u64, row: usize, col: usize) -> bool{
 }
 
 
-fn solveGrid(grid: &mut Vec<Vec<u64>>, mut row: usize, mut col: usize) -> bool{
+fn solveGrid(grid: &mut Vec<Vec<u32>>, mut row: usize, mut col: usize) -> bool{
     let size = grid.len();
     if row == size-1 && col == size{
         return true
@@ -42,7 +42,8 @@ fn solveGrid(grid: &mut Vec<Vec<u64>>, mut row: usize, mut col: usize) -> bool{
         return solveGrid(grid, row + 1, 0);
     }
 
-    if grid[row][col] != 0{
+    if grid[row][col] > 0{
+
         return solveGrid(grid, row, col + 1);
     }
 
@@ -68,17 +69,15 @@ fn main() -> io::Result<()> {
         let mut row = Vec::new();
         for c in line.unwrap().chars(){
             if c != ',' {
-                row.push(c as u64);
+                let x = c.to_digit(10).unwrap();
+                row.push(x);
             }
         }
 
         grid.push(row);
     }
-
-
-    solveGrid(&mut grid, 0, 0);
-
-    println!("{}",grid[0][1]);
+    solveGrid(&mut grid,0,0);
+    println!("{}", grid[0][0]);
 
     Ok(())
 }
