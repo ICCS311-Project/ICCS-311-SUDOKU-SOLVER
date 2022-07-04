@@ -5,13 +5,13 @@ use std::io::*;
 
 fn is_save(mut grid: &Vec<Vec<u32>>, num: u32, row: usize, col: usize) -> bool{
     let size = grid[0].len();
-    for i in 0..=size{
-        if grid[row][i] == num{
-            return false
-        }
+    let mut error = 0;
+    if grid[row].contains(&num){
+        return false
+
     }
 
-    for j in 0..=size{
+    for j in 0..size{
         if grid[j][col] == num{
             return false
         }
@@ -26,7 +26,9 @@ fn is_save(mut grid: &Vec<Vec<u32>>, num: u32, row: usize, col: usize) -> bool{
             if grid[i+rowChop][j+colChop] == num {
                 return false
             }
+            j+=1;
         }
+        i +=1;
     }
 
     return true;
@@ -48,7 +50,7 @@ fn solveGrid(grid: &mut Vec<Vec<u32>>, mut row: usize, mut col: usize) -> bool{
     }
 
     for num in 1..=9 {
-        if is_save(&grid, num, row, col) == true{
+        if is_save(&grid, num, row, col){
             grid[row][col] = num;
 
             if solveGrid(grid, row, col + 1){
@@ -77,7 +79,12 @@ fn main() -> io::Result<()> {
         grid.push(row);
     }
     solveGrid(&mut grid,0,0);
-    println!("{}", grid[0][0]);
+    for lel in grid{
+        for olo in lel{
+            print!("{}, ", olo);
+        }
+        println!("");
+    }
 
     Ok(())
 }
