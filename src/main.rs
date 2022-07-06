@@ -4,7 +4,7 @@ use std::io::*;
 use rand::Rng;
 
 
-fn is_save(mut grid: &Vec<Vec<u32>>, num: u32, row: usize, col: usize) -> bool{
+fn is_safe(mut grid: &Vec<Vec<u32>>, num: u32, row: usize, col: usize) -> bool{
     let size = grid[0].len();
     let mut error = 0;
     if grid[row].contains(&num){
@@ -51,7 +51,7 @@ fn solveGrid(grid: &mut Vec<Vec<u32>>, mut row: usize, mut col: usize) -> bool{
     }
 
     for num in 1..=9 {
-        if is_save(&grid, num, row, col) {
+        if is_safe(&grid, num, row, col) {
             grid[row][col] = num;
             println!("{} put at {} {}", num, row, col);
             println!("");
