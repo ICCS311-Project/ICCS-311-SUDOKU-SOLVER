@@ -56,8 +56,8 @@ fn solveGrid(grid: &mut Vec<Vec<u32>>, mut row: usize, mut col: usize) -> bool{
             if solveGrid(grid, row,col + 1) {
                 return true
             }
-            grid[row][col] = 0;
         }
+        grid[row][col] = 0;
     }
     return false;
 }
