@@ -53,8 +53,6 @@ fn solveGrid(grid: &mut Vec<Vec<u32>>, mut row: usize, mut col: usize) -> bool{
     for num in 1..=9 {
         if is_safe(&grid, num, row, col) {
             grid[row][col] = num;
-            println!("{} put at {} {}", num, row, col);
-            println!("");
             if solveGrid(grid, row,col + 1) {
                 return true
             }
