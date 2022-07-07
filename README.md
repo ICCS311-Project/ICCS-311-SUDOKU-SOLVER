@@ -1,7 +1,9 @@
 # ICCS-311-Project-Sudoku-Solver
 
 Hello guys this is Functional and Parallel programming project. We use the backtracking to find all possible solution for the sudoku.
+
 Worawit Penglam 6281453
+
 Email: worawit.penglam@gmail.com or worawit.pen@student.mahidol.edu
 
 resourses:
