@@ -1,8 +1,9 @@
+use core::num;
 use std::fs::File;
 use std::io;
 use std::io::*;
-use rand::Rng;
-
+use std::collections::HashSet;
+use std::ptr::null;
 
 
 fn is_safe(mut grid: &Vec<Vec<u32>>, num: u32, row: usize, col: usize) -> bool{
@@ -67,9 +68,64 @@ fn solveGrid(grid: &mut Vec<Vec<u32>>, mut row: usize, mut col: usize) -> bool{
     return false;
 }
 
+fn solveAllSoln(grid: &mut Vec<Vec<u32>>, mut row: usize, mut col: usize, mut resultSet: HashSet<Vec<Vec<u32>>> ) -> HashSet<Vec<Vec<u32>>> {
+    
+    let grid_size: usize = grid.len()-1;
+    // base case check if we reach the last cell i.e. row = 8 and col = 8
+    if row == grid_size && col == grid_size { //grid_size = 8 for 9*9
+        if grid[row][col] > 0 {     //if the cell in the last index has valid number then we save it to our resultSet
+            resultSet.insert(grid.clone());
+            return resultSet;
+        }
+        else {                      //when the last cell is blank then we check for possible num to be in the cell
+            for num in 1..=9 {
+                if is_safe(grid, num, row, col){
+                    grid[row][col] = num;
+                    resultSet.insert(grid.clone());
+                    grid[row][col] = 0; // reset the grid[row][col] to 0 (unfilled) so, that we can search for other possible soln
+        
+                }
+            }
+            return;
+        }    
+    }
+    if col > grid_size {
+        solveAllSoln(grid, row+1, 0, resultSet);
+        return resultSet;
+    }
+    if grid[row][col] == 0 {    //if cell is empty then check for all possible number
+        for num in 1..=9 {
+            if is_safe(grid, num, row, col){ grid[row][col] = num; }
+            solveAllSoln(grid, row, col+1, resultSet);
+            grid[row][col] = 0
+        }
+    }
+    else {
+        solveAllSoln(grid, row, col+1, resultSet);
+    }
+    return resultSet;
+
+}
+
+// fn recursiveLoop(mut start: u32, mut stop: u32) -> u32 {
+//     match start {
+//         stop => start,
+//         _ => {println!("hi{}",start);
+//             recursiveLoop(start+1, stop)}, 
+//     }
+// }
+
+// fn recursiveLoop2(mut start: u32, mut stop: u32) -> u32 {
+//     if start == stop+1 {return start}
+//     else{ 
+//         println!("hello {}", start);
+//         recursiveLoop2(start+1, stop)
+//     }
+// }
+
 
 fn main() -> io::Result<()> {
-    let file = File::open("Test//map1.txt").unwrap();
+    let file = File::open("Test//map2.txt").unwrap();
     let reader = BufReader::new(file);
     let mut grid = vec![];
     for line in reader.lines(){         //get line from the file
@@ -89,23 +145,83 @@ fn main() -> io::Result<()> {
     //newGrid sudoku <= solved
 
 
-    if solveGrid(&mut newGrid,0,0){
-        for line in newGrid{
+    // if solveGrid(&mut newGrid,0,0){
+    //     for line in newGrid{
+    //         for cell in line{
+    //             print!("{}, ", cell);
+    //         }
+    //         println!("");
+    //     }
+
+    // }
+    // println!("");
+
+    // for line in grid{
+    //     for cell in line{
+    //         print!("{}, ", cell);
+    //     }
+    //     println!("");
+    // }
+    
+    //let allSoln: HashSet<Vec<Vec<u32>>> = solveAllSoln(&mut grid, 0, 0, HashSet::new());
+
+    let mut grid1 = vec![
+    vec![5, 3, 0, 0, 7, 0, 0, 0, 0], 
+    vec![6, 0, 0, 1, 9, 5, 0, 0, 0],
+    vec![0, 9, 8, 0, 0, 0, 0, 6, 0],
+    vec![8, 0, 0, 0, 6, 0, 0, 0, 3],
+    vec![4, 0, 0, 8, 0, 3, 0, 0, 1],
+    vec![7, 0, 0, 0, 2, 0, 0, 0, 6],
+    vec![0, 6, 0, 0, 0, 0, 2, 8, 0],
+    vec![0, 0, 0, 4, 1, 9, 0, 0, 5],
+    vec![0, 0, 0, 0, 8, 0, 0, 0, 0], 
+    ];
+
+    let mut grid2 = vec![
+        vec![5, 3, 0, 0, 7, 0, 0, 0, 0], 
+        vec![6, 0, 0, 1, 9, 5, 0, 0, 0],
+        vec![0, 9, 8, 0, 0, 0, 0, 6, 0],
+        vec![8, 0, 0, 0, 6, 0, 0, 0, 3],
+        vec![4, 0, 0, 8, 0, 3, 0, 0, 1],
+        vec![7, 0, 0, 0, 2, 0, 0, 0, 6],
+        vec![0, 6, 0, 0, 0, 0, 2, 8, 0],
+        vec![0, 0, 0, 4, 1, 9, 0, 0, 5],
+        vec![0, 0, 0, 0, 8, 0, 0, 0, 0], 
+        ];
+
+        let mut grid3 = vec![
+        vec![5, 3, 0, 0, 7, 0, 0, 0, 0], 
+        vec![6, 0, 0, 1, 9, 5, 0, 0, 0],
+        vec![0, 9, 8, 0, 0, 0, 0, 6, 0],
+        vec![8, 0, 0, 0, 6, 0, 0, 0, 3],
+        vec![4, 0, 0, 8, 0, 3, 0, 0, 1],
+        vec![7, 0, 0, 0, 2, 0, 0, 0, 6],
+        vec![0, 6, 0, 0, 0, 0, 2, 8, 0],
+        vec![0, 0, 0, 4, 1, 9, 0, 0, 5],
+        vec![0, 0, 0, 0, 8, 0, 0, 0, 1], 
+        ];
+
+    let mut books = HashSet::new();
+
+    books.insert(grid1);
+    books.insert(grid2);
+    books.insert(grid3);
+
+    for book in &books {
+        for line in book{
             for cell in line{
                 print!("{}, ", cell);
             }
             println!("");
         }
-
-    }
-    println!("");
-
-    for line in grid{
-        for cell in line{
-            print!("{}, ", cell);
-        }
         println!("");
     }
+
+    //recursiveLoop2(0, 4);
+    for n in 1..=10 {
+        println!("{}",n);
+    } 
+
 
     Ok(()) //close the file reader
 }
