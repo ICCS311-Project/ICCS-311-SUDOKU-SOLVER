@@ -25,11 +25,11 @@ fn is_safe(mut grid: &Vec<Vec<u32>>, num: u32, row: usize, col: usize) -> bool{
     // then the search block would be block [0,1]
     // and the search cells would be row 0-> 2 and col 3->5
 
-    let mut i = 0;
-    let mut j = 0;
-    while i < 3{
-        while j < 3{
-            if grid[i+rowChop][j+colChop] == num {    //if the number already exists within that block then return false
+    let mut i = rowChop;
+    while i <= rowChop+2{
+        let mut j = colChop;
+        while j <= colChop+2{
+            if grid[i][j] == num {    //if the number already exists within that block then return false
                 return false
             }
             j+=1;
@@ -147,7 +147,7 @@ fn printDeezNuts(inputs: HashSet<Vec<Vec<u32>>>){
 }
 
 fn main() -> io::Result<()> {
-    let file = File::open("Test//map1.txt").unwrap();
+    let file = File::open("Test//map2.txt").unwrap();
     let reader = BufReader::new(file);
     let mut grid = vec![];
     for line in reader.lines(){         //get line from the file
