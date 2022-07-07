@@ -1,4 +1,19 @@
 # ICCS-311-Project-Sudoku-Solver
-# ICCS-311-Project-Sudoku-Solver
 
-Henlo there!
+<<<<<<< HEAD
+Henlo there! I'm just pushing it to a new branch.
+
+resourses:
+https://norvig.com/sudoku.html
+https://www.geeksforgeeks.org/sudoku-backtracking-7/
+https://www.tutorialspoint.com/introduction-to-backtracking#:~:text=Backtracking%20is%20a%20technique%20based,given%20to%20solve%20the%20problem.
+https://medium.com/swlh/sudoku-solver-using-backtracking-in-python-8b0879eb5c2d
+https://doc.rust-lang.org/std/collections/struct.HashSet.html
+http://www.afjarvis.staff.shef.ac.uk/sudoku/
+https://exercism.org/tracks/rust/exercises/parallel-letter-frequency/solutions/btolfa
+
+=======
+PAIN ONLY
+
+Henlo there! I'm just pushing it to a new branch.
+>>>>>>> 2e3d10485a13e4b622b7be9b68571ee3ab3d4e7b
