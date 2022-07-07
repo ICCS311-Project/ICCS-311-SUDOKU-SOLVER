@@ -70,7 +70,6 @@ fn solveAllSoln<'a>(grid: &'a mut Vec<Vec<u32>>, mut row: usize, mut col: usize,
 
 
     if col == grid_size {
-        //solveAllSoln(grid, row+1, 0, resultSet);
         return solveAllSoln(grid, row+1, 0, resultSet);
     }
     if grid[row][col] == 0 {    //if cell is empty then check for all possible number
@@ -96,7 +95,6 @@ fn showsSol(inputs: HashSet<Vec<Vec<u32>>>){
         for line in big{
             for cell in line{
                 print!("{}, ", cell);
-
             }
             println!("");
     }
