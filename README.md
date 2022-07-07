@@ -16,6 +16,3 @@ http://www.afjarvis.staff.shef.ac.uk/sudoku/
 https://exercism.org/tracks/rust/exercises/parallel-letter-frequency/solutions/btolfa
 
 =======
-
-Henlo there! I'm just pushing it to a new branch.
-
