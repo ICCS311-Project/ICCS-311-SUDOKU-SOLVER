@@ -45,9 +45,9 @@ fn solveAllSoln<'a>(grid: &'a mut Vec<Vec<u32>>, mut row: usize, mut col: usize,
 
     let grid_size: usize = grid.len();
     // base case check if we reach the last cell i.e. row = 8 and col = 8
-    if row == grid_size-1 && col == grid_size { //grid_size = 8 for 9*9
+    if row == grid_size-1 && col == grid_size-1 { //grid_size = 8 for 9*9
 
-        if grid[row][col-1] > 0 {     //if the cell in the last index has valid number then we save it to our resultSet
+        if grid[row][col] > 0 {     //if the cell in the last index has valid number then we save it to our resultSet
 
             resultSet.insert(grid.clone());
 
@@ -76,7 +76,6 @@ fn solveAllSoln<'a>(grid: &'a mut Vec<Vec<u32>>, mut row: usize, mut col: usize,
         for num in 1..=9 {
             if is_safe(grid, num, row, col){
                 grid[row][col] = num;
-
 
                 solveAllSoln(grid, row, col+1, resultSet);
                 grid[row][col] = 0;
