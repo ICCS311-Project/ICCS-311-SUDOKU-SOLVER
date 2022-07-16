@@ -1,6 +1,5 @@
 # ICCS-311-Project-Sudoku-Solver
 
-<<<<<<< HEAD
 Henlo there! I'm just pushing it to a new branch.
 
 resourses:
@@ -12,8 +11,3 @@ https://doc.rust-lang.org/std/collections/struct.HashSet.html
 http://www.afjarvis.staff.shef.ac.uk/sudoku/
 https://exercism.org/tracks/rust/exercises/parallel-letter-frequency/solutions/btolfa
 
-=======
-PAIN ONLY
-
-Henlo there! I'm just pushing it to a new branch.
->>>>>>> 2e3d10485a13e4b622b7be9b68571ee3ab3d4e7b

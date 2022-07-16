@@ -75,7 +75,6 @@ fn solveAllSoln(grid: &mut Vec<Vec<u32>>, mut row: usize, mut col: usize, mut re
     if row == grid_size && col == grid_size { //grid_size = 8 for 9*9
         if grid[row][col] > 0 {     //if the cell in the last index has valid number then we save it to our resultSet
             resultSet.insert(grid.clone());
-            return resultSet;
         }
         else {                      //when the last cell is blank then we check for possible num to be in the cell
             for num in 1..=9 {
@@ -83,15 +82,14 @@ fn solveAllSoln(grid: &mut Vec<Vec<u32>>, mut row: usize, mut col: usize, mut re
                     grid[row][col] = num;
                     resultSet.insert(grid.clone());
                     grid[row][col] = 0; // reset the grid[row][col] to 0 (unfilled) so, that we can search for other possible soln
-        
                 }
             }
-            return;
         }    
+        return resultSet;
     }
     if col > grid_size {
         solveAllSoln(grid, row+1, 0, resultSet);
-        return resultSet;
+        //return resultSet;
     }
     if grid[row][col] == 0 {    //if cell is empty then check for all possible number
         for num in 1..=9 {
@@ -136,7 +134,6 @@ fn main() -> io::Result<()> {
                 row.push(x);
             }
         }
-
         grid.push(row);                                         //add the row vector to the grid
     }
 
