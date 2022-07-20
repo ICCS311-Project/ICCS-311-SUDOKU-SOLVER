@@ -1,23 +1,20 @@
+mod parSolver;
+
 use core::num;
 use std::fs::File;
 use std::io;
 use std::io::*;
 use std::collections::HashSet;
 use std::ptr::null;
-use rayon::prelude::*;
+use crate::parSolver::solveAllSoln;
 
-mod parSolver;
-mod seqSolver;
 
 fn showsSol(inputs: HashSet<Vec<Vec<u32>>>){
     for big in inputs{
         for line in big{
-            for cell in line{
-                print!("{}, ", cell);
-            }
-            println!("");
-    }
-    println!("");
+            println!("{:?}",line);
+        }
+        println!("");
     }
 }
 
@@ -33,18 +30,19 @@ fn main() -> io::Result<()> {
                 row.push(x);
             }
         }
+
         grid.push(row);                                         //add the row vector to the grid
     }
 
-    let mut solutions = HashSet::new();
-    seqSolver::solveAllSoln(&mut grid, 0, 0, &mut solutions);
-    println!("Running Seq Solver. There are {} ways to solve this Sudoku", solutions.len());
-    showsSol(solutions);
 
-    let mut parSolutions = HashSet::new();
-    parSolver::solveAllSoln(&mut grid, 0, 0, &mut parSolutions);
-    println!("Running Party Solver. There are {} ways to solve this Sudoku", parSolutions.len());
-    showsSol(parSolutions);
+    let mut books = HashSet::new();
+
+    solveAllSoln(&mut grid, 0, 0, &mut books);
+    println!("There are {} ways to solve this Sudoku", books.len());
+
+    showsSol(books);
+
+
 
     Ok(()) //close the file reader
 }

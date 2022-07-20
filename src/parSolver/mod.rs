@@ -20,7 +20,6 @@ fn par_sum(v: &[i32]) -> i32 {
 #[allow(dead_code)]
 fn col_check<u32: Copy + Send + Ord + Sync>(mut grid: &Vec<Vec<u32>>, num: u32, row: usize, col: usize) -> bool{
     let size = grid[0].len();
-    let mut flag = false;
     let v_bool:Vec<i32> = (0..size).into_par_iter()
     .map(|r|{
         if grid[r][col] == num{
@@ -30,8 +29,10 @@ fn col_check<u32: Copy + Send + Ord + Sync>(mut grid: &Vec<Vec<u32>>, num: u32, 
         }
     }).collect::<Vec<i32>>();
 
+    let sameCase: i32 = v_bool.into_par_iter().sum();
+
    
-    if v_bool.contains(&1){
+    if sameCase > 0{
         return true
     } else {
         false
