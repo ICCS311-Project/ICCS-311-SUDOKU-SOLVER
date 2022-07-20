@@ -7,18 +7,79 @@ use std::ptr::null;
 use rayon::prelude::*;
 use std::sync::{Arc, Mutex};
 
-fn is_safe(mut grid: &Vec<Vec<u32>>, num: u32, row: usize, col: usize) -> bool{
-    let size = grid[0].len();       //grid size i.e. 9
 
-    if grid[row].contains(&num){            //if the number already exists within that row then return false
+fn par_sum(v: &[i32]) -> i32 {
+    if v.len() <= 1 { //
+    return v.iter().sum();
+    }
+    let (left, right) = v.split_at(v.len()/2);
+    let (left_sum, right_sum) = rayon::join(|| par_sum(left),
+    || par_sum(right));
+    left_sum + right_sum
+}
+#[allow(dead_code)]
+fn col_check<u32: Copy + Send + Ord + Sync>(mut grid: &Vec<Vec<u32>>, num: u32, row: usize, col: usize) -> bool{
+    // let size = grid[0].len();
+    // let (up, down) = (0..size/2, size/2..size);
+    // let (left_sum, right_sum) = rayon::join(|| par_sum(left),
+    // || par_sum(right));
+    // left_sum + right_sum
+
+
+    // fn helper(mut grid: &Vec<Vec<u32>>, num: u32, rows: &Vec<usize>, col: usize){
+    //     let magic_number = 1;
+
+    //     if rows.len() <= magic_number {
+            
+    // }
+    // if row.len() <= 1 {
+    //     if grid[row[0]][col] == num {return false}
+    //     else {return true}
+    // }
+    // else{
+    //     if grid[row[0]][col] == num {return false}
+    //     row.pop();
+    // }    
+    // let size = grid[0].len();
+    // let (up, down) = (0..size/2, size/2..size);
+    // let (up_sum, down_sum) = rayon::join(|| par_sum(up),
+    // || par_sum(down));
+    // up_sum && down_sum
+    true
+}
+
+//if the number already exists within that row then return false
+fn row_check<u32: Copy + Send + Ord + Sync>(mut grid: &Vec<Vec<u32>>, num: u32, row: usize, col: usize) -> bool{
+    let size = grid[0].len();
+    let (left, right) = grid[row].split_at(size/2);
+    let (left_sum, right_sum) = rayon::join(|| left.contains(&num),
+    || right.contains(&num));
+    if left_sum || right_sum{
+        return true;
+    }
+    else{
         return false
     }
 
+}
+
+fn is_safe<u32: Copy + Send + Ord + Sync>(mut grid: &Vec<Vec<u32>>, num: u32, row: usize, col: usize) -> bool{
+    let size = grid[0].len();       //grid size i.e. 9
+
+    //row check
+    // if grid[row].contains(&num){            
+    //     return false
+    // }
+    if row_check(grid, num, row, col){ return false}
+
+    //col check
     for j in 0..size{
         if grid[j][col] == num{             //if the number already exists within that column then return false
             return false
         }
     }
+    
+
 
     let rowChop = row - row%3;      //3*3 block
     let colChop = col - col%3;
@@ -41,7 +102,6 @@ fn is_safe(mut grid: &Vec<Vec<u32>>, num: u32, row: usize, col: usize) -> bool{
 
     return true;
 }
-
 
 pub fn solveAllSoln<'a>(grid: &'a mut Vec<Vec<u32>>, mut row: usize, mut col: usize, mut resultSet: &'a mut HashSet<Vec<Vec<u32>>> ) -> &'a HashSet<Vec<Vec<u32>>> {
 
