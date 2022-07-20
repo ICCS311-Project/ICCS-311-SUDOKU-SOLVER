@@ -1,4 +1,5 @@
 mod parSolver;
+mod apiSolver;
 
 use core::num;
 use std::fs::File;
@@ -6,6 +7,7 @@ use std::io;
 use std::io::*;
 use std::collections::HashSet;
 use std::ptr::null;
+use crate::apiSolver::apiSolution;
 use crate::parSolver::solveAllSoln;
 
 
@@ -19,7 +21,12 @@ fn showsSol(inputs: HashSet<Vec<Vec<u32>>>){
 }
 
 fn main() -> io::Result<()> {
-    let file = File::open("Test//map2.txt").unwrap();
+
+    let paths:String = "Test//map2.txt".to_string();
+
+    let file = File::open(paths.clone()).unwrap();
+
+
     let reader = BufReader::new(file);
     let mut grid = vec![];
     for line in reader.lines(){         //get line from the file
@@ -42,7 +49,7 @@ fn main() -> io::Result<()> {
 
     showsSol(books);
 
-
+    apiSolution(paths.clone());
 
     Ok(()) //close the file reader
 }
