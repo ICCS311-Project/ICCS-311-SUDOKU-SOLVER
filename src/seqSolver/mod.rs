@@ -91,15 +91,4 @@ pub fn solveAllSoln<'a>(grid: &'a mut Vec<Vec<u32>>, mut row: usize, mut col: us
 
 }
 
-fn showsSol(inputs: HashSet<Vec<Vec<u32>>>){
-    for big in inputs{
-        for line in big{
-            for cell in line{
-                print!("{}, ", cell);
-            }
-            println!("");
-    }
-    println!("");
-    }
-}
 

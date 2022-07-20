@@ -38,9 +38,13 @@ fn main() -> io::Result<()> {
 
     let mut solutions = HashSet::new();
     seqSolver::solveAllSoln(&mut grid, 0, 0, &mut solutions);
-    println!("There are {} ways to solve this Sudoku", solutions.len());
-
+    println!("Running Seq Solver. There are {} ways to solve this Sudoku", solutions.len());
     showsSol(solutions);
+
+    let mut parSolutions = HashSet::new();
+    parSolver::solveAllSoln(&mut grid, 0, 0, &mut parSolutions);
+    println!("Running Party Solver. There are {} ways to solve this Sudoku", parSolutions.len());
+    showsSol(parSolutions);
 
     Ok(()) //close the file reader
 }
