@@ -19,6 +19,24 @@ fn par_sum(v: &[i32]) -> i32 {
 }
 #[allow(dead_code)]
 fn col_check<u32: Copy + Send + Ord + Sync>(mut grid: &Vec<Vec<u32>>, num: u32, row: usize, col: usize) -> bool{
+    let size = grid[0].len();
+    let mut flag = false;
+    let v_bool:Vec<i32> = (0..size).into_par_iter()
+    .map(|r|{
+        if grid[r][col] == num{
+            return 1
+        } else {
+            0
+        }
+    }).collect::<Vec<i32>>();
+
+   
+    if v_bool.contains(&1){
+        return true
+    } else {
+        false
+    }
+       
     // let size = grid[0].len();
     // let (up, down) = (0..size/2, size/2..size);
     // let (left_sum, right_sum) = rayon::join(|| par_sum(left),
@@ -45,7 +63,6 @@ fn col_check<u32: Copy + Send + Ord + Sync>(mut grid: &Vec<Vec<u32>>, num: u32, 
     // let (up_sum, down_sum) = rayon::join(|| par_sum(up),
     // || par_sum(down));
     // up_sum && down_sum
-    true
 }
 
 //if the number already exists within that row then return false
@@ -64,20 +81,28 @@ fn row_check<u32: Copy + Send + Ord + Sync>(mut grid: &Vec<Vec<u32>>, num: u32, 
 }
 
 fn is_safe<u32: Copy + Send + Ord + Sync>(mut grid: &Vec<Vec<u32>>, num: u32, row: usize, col: usize) -> bool{
+
+    let(horizontal, vertical) = rayon::join(||row_check(grid, num, row, col), || col_check(grid, num, row, col));
+
+    if (horizontal || vertical){
+        return false
+    }
+
     let size = grid[0].len();       //grid size i.e. 9
 
     //row check
     // if grid[row].contains(&num){            
     //     return false
     // }
-    if row_check(grid, num, row, col){ return false}
+   // if row_check(grid, num, row, col){ return false}
 
     //col check
-    for j in 0..size{
-        if grid[j][col] == num{             //if the number already exists within that column then return false
-            return false
-        }
-    }
+    // for j in 0..size{
+    //     if grid[j][col] == num{             //if the number already exists within that column then return false
+    //         return false
+    //     }
+    // }
+   // if col_check(grid, num, row, col){ return false}
     
 
 
