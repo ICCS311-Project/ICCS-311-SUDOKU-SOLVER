@@ -43,15 +43,15 @@ fn main() -> io::Result<()> {
         grid.push(row);                                         //add the row vector to the grid
     }
 
-    // let mut solutions = HashSet::new();
-    // seqSolver::solveAllSoln(&mut grid, 0, 0, &mut solutions);
-    // println!("Running Seq Solver. There are {} ways to solve this Sudoku", solutions.len());
-    // showsSol(solutions);
+    let mut solutions = HashSet::new();
+    seqSolver::solveAllSoln(&mut grid, 0, 0, &mut solutions);
+    println!("Running Seq Solver. There are {} ways to solve this Sudoku", solutions.len());
+    showsSol(solutions);
 
-    // let mut parSolutions = HashSet::new();
-    // parSolver::solveAllSoln(&mut grid, 0, 0, &mut parSolutions);
-    // println!("Running Party Solver. There are {} ways to solve this Sudoku", parSolutions.len());
-    // showsSol(parSolutions);
+    let mut parSolutions = HashSet::new();
+    parSolver::solveAllSoln(&mut grid, 0, 0, &mut parSolutions);
+    println!("Running Party Solver. There are {} ways to solve this Sudoku", parSolutions.len());
+    showsSol(parSolutions);
 
     // let mut solutions = HashSet::new();
     // let (solutions, t) = timed(|| seqSolver::solveAllSoln(&mut grid, 0, 0, &mut solutions));
