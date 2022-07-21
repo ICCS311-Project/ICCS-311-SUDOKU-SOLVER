@@ -1,11 +1,13 @@
 use core::num;
+use std::borrow::BorrowMut;
 use std::fs::File;
 use std::io;
 use std::io::*;
-use std::collections::HashSet;
+use chashmap::CHashMap;
 use std::ptr::null;
 use rayon::prelude::*;
 use std::sync::{Arc, Mutex};
+
 
 
 fn par_sum(v: &[i32]) -> i32 {
@@ -17,6 +19,7 @@ fn par_sum(v: &[i32]) -> i32 {
     || par_sum(right));
     left_sum + right_sum
 }
+
 #[allow(dead_code)]
 fn col_check<u32: Copy + Send + Ord + Sync>(mut grid: &Vec<Vec<u32>>, num: u32, row: usize, col: usize) -> bool{
     let size = grid[0].len();
@@ -129,24 +132,22 @@ fn is_safe<u32: Copy + Send + Ord + Sync>(mut grid: &Vec<Vec<u32>>, num: u32, ro
     return true;
 }
 
-pub fn solveAllSoln<'a>(grid: &'a mut Vec<Vec<u32>>, mut row: usize, mut col: usize, mut resultSet: &'a mut HashSet<Vec<Vec<u32>>> ) -> &'a HashSet<Vec<Vec<u32>>> {
+pub fn solveAllSoln<'a>(grid: &'a mut Vec<Vec<u32>>, mut row: usize, mut col: usize,  resultSet: &'a  CHashMap<Vec<Vec<u32>>, u32> ) -> &'a CHashMap<Vec<Vec<u32>>, u32> {
 
     let grid_size: usize = grid.len();
     // base case check if we reach the last cell i.e. row = 8 and col = 8
     if row == grid_size-1 && col == grid_size-1 { //grid_size = 8 for 9*9
 
+
         if grid[row][col] > 0 {     //if the cell in the last index has valid number then we save it to our resultSet
-
-            resultSet.insert(grid.clone());
-
+            resultSet.insert(grid.clone(),0);
             return resultSet;
         }
         else {                      //when the last cell is blank then we check for possible num to be in the cell
             (1..=9).into_iter().for_each(|num| {
                 if is_safe(grid, num, row, col){
                     grid[row][col] = num;
-
-                    resultSet.insert(grid.clone());
+                    resultSet.insert(grid.clone(),0);
 
                     grid[row][col] = 0; // reset the grid[row][col] to 0 (unfilled) so, that we can search for other possible soln
                 }
@@ -159,18 +160,45 @@ pub fn solveAllSoln<'a>(grid: &'a mut Vec<Vec<u32>>, mut row: usize, mut col: us
 
 
     if col == grid_size {
+
         return solveAllSoln(grid, row+1, 0, resultSet);
     }
-    if grid[row][col] == 0 {    //if cell is empty then check for all possible number
-        (1..=9).into_iter().for_each(|num| {
-            if is_safe(grid, num, row, col){
-                grid[row][col] = num;
+    if grid[row][col] == 0{    //if cell is empty then check for all possible number
+        //
+        // for num in 1..=9 {
+        //     if is_safe(grid, num, row, col){
+        //         grid[row][col] = num;
+        //
+        //         solveAllSoln(grid, row, col+1, resultSet);
+        //         grid[row][col] = 0;
+        //     }
+        // }
 
-                solveAllSoln(grid, row, col+1, resultSet);
-                grid[row][col] = 0;
+
+        (1..=9).into_par_iter().for_each(|num| {
+
+            if is_safe(grid, num, row, col){
+                let mut newgrid = grid.clone();
+                //let mut newResultSet = resultSet.clone();
+                newgrid[row][col] = num;
+
+
+                solveAllSoln(&mut newgrid, row, col+1, resultSet);
+                newgrid[row][col] = 0;
             }
-        })
+        });
     }
+        // else if grid[row][col] == 0 && row > 4{
+        //     (1..=9).into_iter().for_each(|num| {
+        //         if is_safe(grid, num, row, col){
+        //             grid[row][col] = num;
+        //             solveAllSoln(grid, row, col+1, resultSet);
+        //             grid[row][col] = 0; // reset the grid[row][col] to 0 (unfilled) so, that we can search for other possible soln
+        //         }
+        //     }
+        //     )
+        // }
+
     else {
         solveAllSoln(grid, row, col+1, resultSet);
     }

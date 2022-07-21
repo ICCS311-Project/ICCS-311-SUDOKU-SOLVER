@@ -1,19 +1,19 @@
 mod parSolver;
 mod apiSolver;
-
+mod seqSolver;
+use chashmap::CHashMap;
 use core::num;
 use std::fs::File;
 use std::io;
 use std::io::*;
-use std::collections::HashSet;
 use std::ptr::null;
 use crate::apiSolver::apiSolution;
 use crate::parSolver::solveAllSoln;
 
 
-fn showsSol(inputs: HashSet<Vec<Vec<u32>>>){
+fn showsSol(inputs: CHashMap<Vec<Vec<u32>>, u32>){
     for big in inputs{
-        for line in big{
+        for line in big.0{
             println!("{:?}",line);
         }
         println!("");
@@ -42,14 +42,14 @@ fn main() -> io::Result<()> {
     }
 
 
-    let mut books = HashSet::new();
+    let books = CHashMap::new();
 
-    solveAllSoln(&mut grid, 0, 0, &mut books);
+    solveAllSoln(&mut grid, 0, 0, &books);
     println!("There are {} ways to solve this Sudoku", books.len());
 
     showsSol(books);
-
-    apiSolution(paths.clone());
+    //
+    //apiSolution(paths.clone());
 
     Ok(()) //close the file reader
 }
