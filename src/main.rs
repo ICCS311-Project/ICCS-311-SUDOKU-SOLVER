@@ -3,7 +3,7 @@ mod apiSolver;
 mod seqSolver;
 use chashmap::CHashMap;
 use core::num;
-use std::fs::File;
+use std::{fs::File, collections::HashSet};
 use std::io;
 use std::io::*;
 use std::ptr::null;
@@ -14,13 +14,7 @@ use crate::parSolver::solveAllSoln;
 
 use std::time::{Duration, Instant};
 
-fn timed<R, F>(mut f: F) -> (R, Duration) where F: FnMut() -> R {
-    let starting_point = Instant::now();
-    let res = f();
-    (res, starting_point.elapsed())
-    }
-
-fn showsSol(inputs: CHashMap<Vec<Vec<u32>>, u32>){
+fn showSol(inputs: CHashMap<Vec<Vec<u32>>, u32>){
     for big in inputs{
         for line in big.0{
             println!("{:?}",line);
@@ -29,8 +23,41 @@ fn showsSol(inputs: CHashMap<Vec<Vec<u32>>, u32>){
     }
 }
 
+
+fn runSeqSolver(grid: &mut Vec<Vec<u32>>) -> Duration{
+    let now = Instant::now();
+    {
+    let mut solutions :HashSet<Vec<Vec<u32>>> = HashSet::new();
+    seqSolver::solveAllSoln(grid, 0, 0, &mut solutions);
+    println!("Running Seq Solver. There are {} ways to solve this Sudoku", solutions.len());
+    // showSol(solutions);
+    }
+    let elapsed = now.elapsed();
+    //println!("Elapsed: {:.2?}", elapsed);
+    return elapsed as Duration
+}
+
+fn runParSolver(grid: &mut Vec<Vec<u32>>) -> Duration{
+    let now = Instant::now();
+    {
+    let solutions = CHashMap::new();
+    parSolver::solveAllSoln(grid, 0, 0, &solutions);
+    println!("There are {} ways to solve this Sudoku", solutions.len());
+    //showSol(books);
+    }
+    let elapsed = now.elapsed();
+    //println!("Elapsed: {:.2?}", elapsed);
+    return elapsed as Duration
+}
+
+
+
+
+
 fn main() -> io::Result<()> {
-    let path = "Test//map4.txt";
+
+    let path = "Test//map2.txt";
+    
     let file = File::open(path).unwrap();
     let reader = BufReader::new(file);
     let mut grid = vec![];
@@ -46,29 +73,30 @@ fn main() -> io::Result<()> {
     }
 
     
-    let books = CHashMap::new();
+    // let books = CHashMap::new();
 
-    parSolver::solveAllSoln(&mut grid, 0, 0, &books);
-    println!("There are {} ways to solve this Sudoku", books.len());
+    // parSolver::solveAllSoln(&mut grid, 0, 0, &books);
+    // println!("There are {} ways to solve this Sudoku", books.len());
 
-    showsSol(books);
-
+    // showSol(books);
+    runParSolver(&mut grid);
+    //runSeqSolver(&mut grid);
     apiSolver::apiSolution(path.to_string());
+    
+    
+    use std::time::Instant;
+    let now = Instant::now();
 
+    // Code block to measure.
+    {
+        let mut solutions :HashSet<Vec<Vec<u32>>> = HashSet::new();
+        seqSolver::solveAllSoln(&mut grid, 0, 0, &mut solutions);
+        println!("Running Seq Solver. There are {} ways to solve this Sudoku", solutions.len());
+        showsSol(solutions);
+    }
 
-    // use std::time::Instant;
-    // let now = Instant::now();
-
-    // // Code block to measure.
-    // {
-    //     let mut solutions = HashSet::new();
-        // seqSolver::solveAllSoln(&mut grid, 0, 0, &mut solutions);
-    //     println!("Running Seq Solver. There are {} ways to solve this Sudoku", solutions.len());
-    //     showsSol(solutions);
-    // }
-
-    // let elapsed = now.elapsed();
-    // println!("Elapsed: {:.2?}", elapsed);
+    let elapsed = now.elapsed();
+    println!("Elapsed: {:.2?}", elapsed);
 
     // let now = Instant::now();
 
@@ -84,19 +112,6 @@ fn main() -> io::Result<()> {
     // println!("Elapsed: {:.2?}", elapsed);
 
 
-
-
-    // let mut solutions = HashSet::new();
-    // let (solutions, t) = timed(|| seqSolver::solveAllSoln(&mut grid, 0, 0, &mut solutions));
-    // println!("msort: sorted t={}s", t.as_secs_f64());
-    // showsSol(solutions.clone());
-
-    // let mut parSolutions = HashSet::new();
-    // let (parSolutions, t) = timed(|| parSolver::solveAllSoln(&mut grid, 0, 0, &mut parSolutions));
-    // println!("par_msort_simple: sorted t={}s", t.as_secs_f64());
-    // showsSol(parSolutions.clone());
-    // let (sorted, t) = timed(|| par_msort(&xs));
-    // println!("par_msort: sorted={:?}, t={}s", is_sorted(&sorted), t.as_secs_f64());
 
     Ok(()) //close the file reader
 }

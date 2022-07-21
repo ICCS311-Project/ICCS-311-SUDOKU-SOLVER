@@ -30,14 +30,14 @@ pub(crate) fn apiSolution(path: String){
     let mut count = 0;
     let mut solutions = SolutionIter::new(&board);
 
-    for x in solutions.into_iter() {
+    // for x in solutions.into_iter() {
 
-        println!("{}",x);
-        println!("");
-        count += 1;
-    }
+    //     println!("{}",x);
+    //     println!("");
+    //     count += 1;
+    // }
 
-    println!("{}",count);
+    println!("{}",solutions.count());
 
 
 }

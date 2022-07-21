@@ -42,7 +42,7 @@ fn is_safe(mut grid: &Vec<Vec<u32>>, num: u32, row: usize, col: usize) -> bool{
 }
 
 
-pub fn solveAllSoln<'a>(grid: &'a mut Vec<Vec<u32>>, mut row: usize, mut col: usize, mut resultSet: &'a mut HashSet<Vec<Vec<u32>>> ) -> &'a HashSet<Vec<Vec<u32>>> {
+pub fn solveAllSoln<'a>(grid: &'a mut Vec<Vec<u32>>, mut row: usize, mut col: usize, mut resultSet: &'a mut HashSet<Vec<Vec<u32>>> ) {
 
     let grid_size: usize = grid.len();
     // base case check if we reach the last cell i.e. row = 8 and col = 8
@@ -52,7 +52,7 @@ pub fn solveAllSoln<'a>(grid: &'a mut Vec<Vec<u32>>, mut row: usize, mut col: us
 
             resultSet.insert(grid.clone());
 
-            return resultSet;
+            return ();
         }
         else {                      //when the last cell is blank then we check for possible num to be in the cell
             (1..=9).into_iter().for_each(|num| {
@@ -67,7 +67,7 @@ pub fn solveAllSoln<'a>(grid: &'a mut Vec<Vec<u32>>, mut row: usize, mut col: us
         )
 
         }
-        return resultSet;
+        return ();
     }
 
 
@@ -87,7 +87,7 @@ pub fn solveAllSoln<'a>(grid: &'a mut Vec<Vec<u32>>, mut row: usize, mut col: us
     else {
         solveAllSoln(grid, row, col+1, resultSet);
     }
-    return resultSet;
+    return ();
 
 }
 
