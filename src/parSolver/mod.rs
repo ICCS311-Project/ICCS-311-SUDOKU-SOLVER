@@ -20,7 +20,6 @@ fn par_sum(v: &[i32]) -> i32 {
 #[allow(dead_code)]
 fn col_check<u32: Copy + Send + Ord + Sync>(mut grid: &Vec<Vec<u32>>, num: u32, row: usize, col: usize) -> bool{
     let size = grid[0].len();
-    let mut flag = false;
     let v_bool:Vec<i32> = (0..size).into_par_iter()
     .map(|r|{
         if grid[r][col] == num{
@@ -30,8 +29,9 @@ fn col_check<u32: Copy + Send + Ord + Sync>(mut grid: &Vec<Vec<u32>>, num: u32, 
         }
     }).collect::<Vec<i32>>();
 
-   
-    if v_bool.contains(&1){
+    let sameCase: i32 = v_bool.into_par_iter().sum();
+
+    if sameCase > 0{
         return true
     } else {
         false
@@ -128,7 +128,7 @@ fn is_safe<u32: Copy + Send + Ord + Sync>(mut grid: &Vec<Vec<u32>>, num: u32, ro
     return true;
 }
 
-pub fn solveAllSoln<'a>(grid: &'a mut Vec<Vec<u32>>, mut row: usize, mut col: usize, mut resultSet: &'a mut HashSet<Vec<Vec<u32>>> ) -> &'a HashSet<Vec<Vec<u32>>> {
+pub fn solveAllSoln<'a>(grid: &'a mut Vec<Vec<u32>>, mut row: usize, mut col: usize, mut resultSet: &'a mut HashSet<Vec<Vec<u32>>> ) {
 
     let grid_size: usize = grid.len();
     // base case check if we reach the last cell i.e. row = 8 and col = 8
@@ -138,7 +138,7 @@ pub fn solveAllSoln<'a>(grid: &'a mut Vec<Vec<u32>>, mut row: usize, mut col: us
 
             resultSet.insert(grid.clone());
 
-            return resultSet;
+            return;
         }
         else {                      //when the last cell is blank then we check for possible num to be in the cell
             (1..=9).into_iter().for_each(|num| {
@@ -153,7 +153,7 @@ pub fn solveAllSoln<'a>(grid: &'a mut Vec<Vec<u32>>, mut row: usize, mut col: us
         )
 
         }
-        return resultSet;
+        return;
     }
 
 
@@ -173,7 +173,7 @@ pub fn solveAllSoln<'a>(grid: &'a mut Vec<Vec<u32>>, mut row: usize, mut col: us
     else {
         solveAllSoln(grid, row, col+1, resultSet);
     }
-    return resultSet;
+    return;
 
 }
 

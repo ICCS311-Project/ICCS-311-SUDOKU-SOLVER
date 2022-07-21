@@ -8,6 +8,13 @@ use rayon::prelude::*;
 
 mod parSolver;
 mod seqSolver;
+use std::time::{Duration, Instant};
+
+fn timed<R, F>(mut f: F) -> (R, Duration) where F: FnMut() -> R {
+    let starting_point = Instant::now();
+    let res = f();
+    (res, starting_point.elapsed())
+    }
 
 fn showsSol(inputs: HashSet<Vec<Vec<u32>>>){
     for big in inputs{
@@ -36,15 +43,27 @@ fn main() -> io::Result<()> {
         grid.push(row);                                         //add the row vector to the grid
     }
 
-    let mut solutions = HashSet::new();
-    seqSolver::solveAllSoln(&mut grid, 0, 0, &mut solutions);
-    println!("Running Seq Solver. There are {} ways to solve this Sudoku", solutions.len());
-    showsSol(solutions);
+    // let mut solutions = HashSet::new();
+    // seqSolver::solveAllSoln(&mut grid, 0, 0, &mut solutions);
+    // println!("Running Seq Solver. There are {} ways to solve this Sudoku", solutions.len());
+    // showsSol(solutions);
 
-    let mut parSolutions = HashSet::new();
-    parSolver::solveAllSoln(&mut grid, 0, 0, &mut parSolutions);
-    println!("Running Party Solver. There are {} ways to solve this Sudoku", parSolutions.len());
-    showsSol(parSolutions);
+    // let mut parSolutions = HashSet::new();
+    // parSolver::solveAllSoln(&mut grid, 0, 0, &mut parSolutions);
+    // println!("Running Party Solver. There are {} ways to solve this Sudoku", parSolutions.len());
+    // showsSol(parSolutions);
+
+    // let mut solutions = HashSet::new();
+    // let (solutions, t) = timed(|| seqSolver::solveAllSoln(&mut grid, 0, 0, &mut solutions));
+    // println!("msort: sorted t={}s", t.as_secs_f64());
+    // showsSol(solutions.clone());
+
+    // let mut parSolutions = HashSet::new();
+    // let (parSolutions, t) = timed(|| parSolver::solveAllSoln(&mut grid, 0, 0, &mut parSolutions));
+    // println!("par_msort_simple: sorted t={}s", t.as_secs_f64());
+    // showsSol(parSolutions.clone());
+    // let (sorted, t) = timed(|| par_msort(&xs));
+    // println!("par_msort: sorted={:?}, t={}s", is_sorted(&sorted), t.as_secs_f64());
 
     Ok(()) //close the file reader
 }
