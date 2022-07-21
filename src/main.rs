@@ -29,7 +29,7 @@ fn showsSol(inputs: HashSet<Vec<Vec<u32>>>){
 }
 
 fn main() -> io::Result<()> {
-    let file = File::open("Test//map2.txt").unwrap();
+    let file = File::open("Test//map4.txt").unwrap();
     let reader = BufReader::new(file);
     let mut grid = vec![];
     for line in reader.lines(){         //get line from the file
@@ -43,15 +43,36 @@ fn main() -> io::Result<()> {
         grid.push(row);                                         //add the row vector to the grid
     }
 
-    let mut solutions = HashSet::new();
-    seqSolver::solveAllSoln(&mut grid, 0, 0, &mut solutions);
-    println!("Running Seq Solver. There are {} ways to solve this Sudoku", solutions.len());
-    showsSol(solutions);
+    
+    use std::time::Instant;
+    let now = Instant::now();
 
-    let mut parSolutions = HashSet::new();
-    parSolver::solveAllSoln(&mut grid, 0, 0, &mut parSolutions);
-    println!("Running Party Solver. There are {} ways to solve this Sudoku", parSolutions.len());
-    showsSol(parSolutions);
+    // Code block to measure.
+    {
+        let mut solutions = HashSet::new();
+        seqSolver::solveAllSoln(&mut grid, 0, 0, &mut solutions);
+        println!("Running Seq Solver. There are {} ways to solve this Sudoku", solutions.len());
+        showsSol(solutions);
+    }
+
+    let elapsed = now.elapsed();
+    println!("Elapsed: {:.2?}", elapsed);
+
+    let now = Instant::now();
+
+    // Code block to measure.
+    {
+        let mut parSolutions = HashSet::new();
+        parSolver::solveAllSoln(&mut grid, 0, 0, &mut parSolutions);
+        println!("Running Party Solver. There are {} ways to solve this Sudoku", parSolutions.len());
+        showsSol(parSolutions);
+    }
+
+    let elapsed = now.elapsed();
+    println!("Elapsed: {:.2?}", elapsed);
+
+
+
 
     // let mut solutions = HashSet::new();
     // let (solutions, t) = timed(|| seqSolver::solveAllSoln(&mut grid, 0, 0, &mut solutions));

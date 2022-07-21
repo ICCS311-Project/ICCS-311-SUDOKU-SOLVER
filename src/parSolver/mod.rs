@@ -20,63 +20,48 @@ fn par_sum(v: &[i32]) -> i32 {
 #[allow(dead_code)]
 fn col_check<u32: Copy + Send + Ord + Sync>(mut grid: &Vec<Vec<u32>>, num: u32, row: usize, col: usize) -> bool{
     let size = grid[0].len();
-    let v_bool:Vec<i32> = (0..size).into_par_iter()
-    .map(|r|{
-        if grid[r][col] == num{
-            return 1
-        } else {
-            0
+    for j in 0..size{
+        if grid[j][col] == num{             //if the number already exists within that column then return false
+            return true
         }
-    }).collect::<Vec<i32>>();
-
-    let sameCase: i32 = v_bool.into_par_iter().sum();
-
-    if sameCase > 0{
-        return true
-    } else {
-        false
     }
+    false
+    // let size = grid[0].len();
+    // let v_bool:Vec<i32> = (0..size).into_par_iter()
+    // .map(|r|{
+    //     if grid[r][col] == num{
+    //         return 1
+    //     } else {
+    //         0
+    //     }
+    // }).collect::<Vec<i32>>();
+
+    // let sameCase: i32 = v_bool.into_par_iter().sum();
+
+    // if sameCase > 0{
+    //     return true
+    // } else {
+    //     false
+    // }
        
-    // let size = grid[0].len();
-    // let (up, down) = (0..size/2, size/2..size);
-    // let (left_sum, right_sum) = rayon::join(|| par_sum(left),
-    // || par_sum(right));
-    // left_sum + right_sum
-
-
-    // fn helper(mut grid: &Vec<Vec<u32>>, num: u32, rows: &Vec<usize>, col: usize){
-    //     let magic_number = 1;
-
-    //     if rows.len() <= magic_number {
-            
-    // }
-    // if row.len() <= 1 {
-    //     if grid[row[0]][col] == num {return false}
-    //     else {return true}
-    // }
-    // else{
-    //     if grid[row[0]][col] == num {return false}
-    //     row.pop();
-    // }    
-    // let size = grid[0].len();
-    // let (up, down) = (0..size/2, size/2..size);
-    // let (up_sum, down_sum) = rayon::join(|| par_sum(up),
-    // || par_sum(down));
-    // up_sum && down_sum
 }
 
 //if the number already exists within that row then return false
 fn row_check<u32: Copy + Send + Ord + Sync>(mut grid: &Vec<Vec<u32>>, num: u32, row: usize, col: usize) -> bool{
-    let size = grid[0].len();
-    let (left, right) = grid[row].split_at(size/2);
-    let (left_sum, right_sum) = rayon::join(|| left.contains(&num),
-    || right.contains(&num));
-    if left_sum || right_sum{
-        return true;
+    // let size = grid[0].len();
+    // let (left, right) = grid[row].split_at(size/2);
+    // let (left_sum, right_sum) = rayon::join(|| left.contains(&num),
+    // || right.contains(&num));
+    // if left_sum || right_sum{
+    //     return true;
+    // }
+    // else{
+    //     return false
+    // }
+    if grid[row].contains(&num){            
+        return true
     }
-    else{
-        return false
-    }
+    false
 
 }
 
