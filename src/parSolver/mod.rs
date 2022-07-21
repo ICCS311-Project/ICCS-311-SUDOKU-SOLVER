@@ -132,7 +132,7 @@ fn is_safe<u32: Copy + Send + Ord + Sync>(mut grid: &Vec<Vec<u32>>, num: u32, ro
     return true;
 }
 
-pub fn solveAllSoln<'a>(grid: &'a mut Vec<Vec<u32>>, mut row: usize, mut col: usize,  resultSet: &'a  CHashMap<Vec<Vec<u32>>, u32> ) -> &'a CHashMap<Vec<Vec<u32>>, u32> {
+pub fn solveAllSoln<'a>(grid: &'a mut Vec<Vec<u32>>, mut row: usize, mut col: usize,  resultSet: &'a  CHashMap<Vec<Vec<u32>>, u32> ){
 
     let grid_size: usize = grid.len();
     // base case check if we reach the last cell i.e. row = 8 and col = 8
@@ -141,7 +141,7 @@ pub fn solveAllSoln<'a>(grid: &'a mut Vec<Vec<u32>>, mut row: usize, mut col: us
 
         if grid[row][col] > 0 {     //if the cell in the last index has valid number then we save it to our resultSet
             resultSet.insert(grid.clone(),0);
-            return resultSet;
+            return ();
         }
         else {                      //when the last cell is blank then we check for possible num to be in the cell
             (1..=9).into_iter().for_each(|num| {
@@ -155,7 +155,7 @@ pub fn solveAllSoln<'a>(grid: &'a mut Vec<Vec<u32>>, mut row: usize, mut col: us
         )
 
         }
-        return resultSet;
+        return ();
     }
 
 
@@ -202,7 +202,7 @@ pub fn solveAllSoln<'a>(grid: &'a mut Vec<Vec<u32>>, mut row: usize, mut col: us
     else {
         solveAllSoln(grid, row, col+1, resultSet);
     }
-    return resultSet;
+    return ();
 
 }
 
