@@ -3,7 +3,7 @@ use std::io;
 use std::io::{BufRead, BufReader};
 use sudoku_solver::{Board, SolutionIter, solve};
 
-pub(crate) fn apiSolution(path: String){
+pub(crate) fn apiSolution(path: String) -> u32{
 
     let file = File::open(path).unwrap();
     let reader = BufReader::new(file);
@@ -30,6 +30,7 @@ pub(crate) fn apiSolution(path: String){
     let mut count = 0;
     let mut solutions = SolutionIter::new(&board);
 
+    //un comment to print all the solutions
     // for x in solutions.into_iter() {
 
     //     println!("{}",x);
@@ -37,7 +38,7 @@ pub(crate) fn apiSolution(path: String){
     //     count += 1;
     // }
 
-    println!("{}",solutions.count());
+   return solutions.count().try_into().unwrap();
 
 
 }

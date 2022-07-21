@@ -23,35 +23,50 @@ fn showSol(inputs: CHashMap<Vec<Vec<u32>>, u32>){
     }
 }
 
+fn showSolHS(inputs: HashSet<Vec<Vec<u32>>>){
+    for big in inputs{
+        for line in big{
+            println!("{:?}",line);
+        }
+        println!("");
+    }
+}
 
-fn runSeqSolver(grid: &mut Vec<Vec<u32>>) -> Duration{
-    let now = Instant::now();
-    {
+
+fn runSeqSolver(grid: &mut Vec<Vec<u32>>) -> (Duration, usize){
+    println!("running sequential sudoku solver");
     let mut solutions :HashSet<Vec<Vec<u32>>> = HashSet::new();
-    seqSolver::solveAllSoln(grid, 0, 0, &mut solutions);
-    println!("Running Seq Solver. There are {} ways to solve this Sudoku", solutions.len());
-    // showSol(solutions);
-    }
-    let elapsed = now.elapsed();
-    //println!("Elapsed: {:.2?}", elapsed);
-    return elapsed as Duration
-}
-
-fn runParSolver(grid: &mut Vec<Vec<u32>>) -> Duration{
     let now = Instant::now();
     {
-    let solutions = CHashMap::new();
-    parSolver::solveAllSoln(grid, 0, 0, &solutions);
-    println!("There are {} ways to solve this Sudoku", solutions.len());
-    //showSol(books);
+    seqSolver::solveAllSoln(grid, 0, 0, &mut solutions);
     }
     let elapsed = now.elapsed();
-    //println!("Elapsed: {:.2?}", elapsed);
-    return elapsed as Duration
+    showSolHS(solutions.clone());
+    return (elapsed as Duration, solutions.len());
 }
 
+fn runParSolver(grid: &mut Vec<Vec<u32>>) -> (Duration, usize){
+    println!("running parallel sudoku solver");
+    let solutions = CHashMap::new();
+    let now = Instant::now();
+    {
+    parSolver::solveAllSoln(grid, 0, 0, &solutions);
+    }
+    let elapsed = now.elapsed();
+    showSol(solutions.clone());
+    return (elapsed as Duration, solutions.len());
+}
 
-
+fn runApiSolver(path: String) -> (Duration, usize){
+    println!("running Rust api sudoku solver");
+    let mut a: u32 = 0;
+    let now = Instant::now();
+    {
+    a = apiSolver::apiSolution(path.to_string());
+    }
+    let elapsed = now.elapsed();
+    return (elapsed as Duration, a.try_into().unwrap());
+}
 
 
 fn main() -> io::Result<()> {
@@ -72,47 +87,12 @@ fn main() -> io::Result<()> {
         grid.push(row);                                         //add the row vector to the grid
     }
 
-    
-    // let books = CHashMap::new();
-
-    // parSolver::solveAllSoln(&mut grid, 0, 0, &books);
-    // println!("There are {} ways to solve this Sudoku", books.len());
-
-    // showSol(books);
-    runParSolver(&mut grid);
-    //runSeqSolver(&mut grid);
-    apiSolver::apiSolution(path.to_string());
-    
-    
-    use std::time::Instant;
-    let now = Instant::now();
-
-    // Code block to measure.
-    {
-        let mut solutions :HashSet<Vec<Vec<u32>>> = HashSet::new();
-        seqSolver::solveAllSoln(&mut grid, 0, 0, &mut solutions);
-        println!("Running Seq Solver. There are {} ways to solve this Sudoku", solutions.len());
-        showsSol(solutions);
-    }
-
-    let elapsed = now.elapsed();
-    println!("Elapsed: {:.2?}", elapsed);
-
-    // let now = Instant::now();
-
-    // // Code block to measure.
-    // {
-    //     let mut parSolutions = HashSet::new();
-    //     parSolver::solveAllSoln(&mut grid, 0, 0, &mut parSolutions);
-    //     println!("Running Party Solver. There are {} ways to solve this Sudoku", parSolutions.len());
-    //     showsSol(parSolutions);
-    // }
-
-    // let elapsed = now.elapsed();
-    // println!("Elapsed: {:.2?}", elapsed);
-
-
-
+    let (parTime, noSolPar) = runParSolver(&mut grid);
+    let (seqTime, noSolSeq) = runSeqSolver(&mut grid);
+    let (apiTime, noSolApi) = runApiSolver(path.to_string());
+    println!("Parallel sudoku solver has {} solutions and it takes: {:.2?} :P", noSolPar,parTime);
+    println!("Sequential sudoku solver has {} solutions and it takes: {:.2?} :P", noSolSeq,seqTime);
+    println!("Api sudoku solver has {} solutions and it takes: {:.2?} :P", noSolApi,apiTime);
     Ok(()) //close the file reader
 }
 
