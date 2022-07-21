@@ -1,13 +1,17 @@
+mod parSolver;
+mod apiSolver;
+mod seqSolver;
+use chashmap::CHashMap;
 use core::num;
 use std::fs::File;
 use std::io;
 use std::io::*;
-use std::collections::HashSet;
 use std::ptr::null;
-use rayon::prelude::*;
+use crate::apiSolver::apiSolution;
+use crate::parSolver::solveAllSoln;
 
-mod parSolver;
-mod seqSolver;
+
+
 use std::time::{Duration, Instant};
 
 fn timed<R, F>(mut f: F) -> (R, Duration) where F: FnMut() -> R {
@@ -16,20 +20,18 @@ fn timed<R, F>(mut f: F) -> (R, Duration) where F: FnMut() -> R {
     (res, starting_point.elapsed())
     }
 
-fn showsSol(inputs: HashSet<Vec<Vec<u32>>>){
+fn showsSol(inputs: CHashMap<Vec<Vec<u32>>, u32>){
     for big in inputs{
-        for line in big{
-            for cell in line{
-                print!("{}, ", cell);
-            }
-            println!("");
-    }
-    println!("");
+        for line in big.0{
+            println!("{:?}",line);
+        }
+        println!("");
     }
 }
 
 fn main() -> io::Result<()> {
-    let file = File::open("Test//map4.txt").unwrap();
+    let path = "Test//map4.txt";
+    let file = File::open(path).unwrap();
     let reader = BufReader::new(file);
     let mut grid = vec![];
     for line in reader.lines(){         //get line from the file
@@ -44,32 +46,42 @@ fn main() -> io::Result<()> {
     }
 
     
-    use std::time::Instant;
-    let now = Instant::now();
+    let books = CHashMap::new();
 
-    // Code block to measure.
-    {
-        let mut solutions = HashSet::new();
-        seqSolver::solveAllSoln(&mut grid, 0, 0, &mut solutions);
-        println!("Running Seq Solver. There are {} ways to solve this Sudoku", solutions.len());
-        showsSol(solutions);
-    }
+    parSolver::solveAllSoln(&mut grid, 0, 0, &books);
+    println!("There are {} ways to solve this Sudoku", books.len());
 
-    let elapsed = now.elapsed();
-    println!("Elapsed: {:.2?}", elapsed);
+    showsSol(books);
 
-    let now = Instant::now();
+    apiSolver::apiSolution(path.to_string());
 
-    // Code block to measure.
-    {
-        let mut parSolutions = HashSet::new();
-        parSolver::solveAllSoln(&mut grid, 0, 0, &mut parSolutions);
-        println!("Running Party Solver. There are {} ways to solve this Sudoku", parSolutions.len());
-        showsSol(parSolutions);
-    }
 
-    let elapsed = now.elapsed();
-    println!("Elapsed: {:.2?}", elapsed);
+    // use std::time::Instant;
+    // let now = Instant::now();
+
+    // // Code block to measure.
+    // {
+    //     let mut solutions = HashSet::new();
+        // seqSolver::solveAllSoln(&mut grid, 0, 0, &mut solutions);
+    //     println!("Running Seq Solver. There are {} ways to solve this Sudoku", solutions.len());
+    //     showsSol(solutions);
+    // }
+
+    // let elapsed = now.elapsed();
+    // println!("Elapsed: {:.2?}", elapsed);
+
+    // let now = Instant::now();
+
+    // // Code block to measure.
+    // {
+    //     let mut parSolutions = HashSet::new();
+    //     parSolver::solveAllSoln(&mut grid, 0, 0, &mut parSolutions);
+    //     println!("Running Party Solver. There are {} ways to solve this Sudoku", parSolutions.len());
+    //     showsSol(parSolutions);
+    // }
+
+    // let elapsed = now.elapsed();
+    // println!("Elapsed: {:.2?}", elapsed);
 
 
 
