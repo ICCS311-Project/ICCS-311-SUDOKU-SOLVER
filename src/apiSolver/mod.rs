@@ -30,7 +30,7 @@ pub(crate) fn apiSolution(path: String) -> u32{
     let mut count = 0;
     let mut solutions = SolutionIter::new(&board);
 
-    //un comment to print all the solutions
+    //uncomment to print all the solutions
     // for x in solutions.into_iter() {
 
     //     println!("{}",x);

@@ -32,7 +32,6 @@ fn showSolHS(inputs: HashSet<Vec<Vec<u32>>>){
     }
 }
 
-
 fn runSeqSolver(grid: &mut Vec<Vec<u32>>) -> (Duration, usize){
     println!("running sequential sudoku solver");
     let mut solutions :HashSet<Vec<Vec<u32>>> = HashSet::new();
@@ -41,7 +40,7 @@ fn runSeqSolver(grid: &mut Vec<Vec<u32>>) -> (Duration, usize){
     seqSolver::solveAllSoln(grid, 0, 0, &mut solutions);
     }
     let elapsed = now.elapsed();
-    showSolHS(solutions.clone());
+    //showSolHS(solutions.clone());
     return (elapsed as Duration, solutions.len());
 }
 
@@ -53,7 +52,7 @@ fn runParSolver(grid: &mut Vec<Vec<u32>>) -> (Duration, usize){
     parSolver::solveAllSoln(grid, 0, 0, &solutions);
     }
     let elapsed = now.elapsed();
-    showSol(solutions.clone());
+    //showSol(solutions.clone());
     return (elapsed as Duration, solutions.len());
 }
 

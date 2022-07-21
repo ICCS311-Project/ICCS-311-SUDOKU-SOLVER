@@ -29,38 +29,12 @@ fn col_check<u32: Copy + Send + Ord + Sync>(mut grid: &Vec<Vec<u32>>, num: u32, 
         }
     }
     false
-    // let size = grid[0].len();
-    // let v_bool:Vec<i32> = (0..size).into_par_iter()
-    // .map(|r|{
-    //     if grid[r][col] == num{
-    //         return 1
-    //     } else {
-    //         0
-    //     }
-    // }).collect::<Vec<i32>>();
 
-    // let sameCase: i32 = v_bool.into_par_iter().sum();
-
-    // if sameCase > 0{
-    //     return true
-    // } else {
-    //     false
-    // }
-       
 }
 
 //if the number already exists within that row then return false
-fn row_check<u32: Copy + Send + Ord + Sync>(mut grid: &Vec<Vec<u32>>, num: u32, row: usize, col: usize) -> bool{
-    // let size = grid[0].len();
-    // let (left, right) = grid[row].split_at(size/2);
-    // let (left_sum, right_sum) = rayon::join(|| left.contains(&num),
-    // || right.contains(&num));
-    // if left_sum || right_sum{
-    //     return true;
-    // }
-    // else{
-    //     return false
-    // }
+fn row_check(mut grid: &Vec<Vec<u32>>, num: u32, row: usize, col: usize) -> bool{
+
     if grid[row].contains(&num){            
         return true
     }
@@ -68,7 +42,7 @@ fn row_check<u32: Copy + Send + Ord + Sync>(mut grid: &Vec<Vec<u32>>, num: u32, 
 
 }
 
-fn is_safe<u32: Copy + Send + Ord + Sync>(mut grid: &Vec<Vec<u32>>, num: u32, row: usize, col: usize) -> bool{
+fn is_safe(mut grid: &Vec<Vec<u32>>, num: u32, row: usize, col: usize) -> bool{
 
     let(horizontal, vertical) = rayon::join(||row_check(grid, num, row, col), || col_check(grid, num, row, col));
 
@@ -77,23 +51,6 @@ fn is_safe<u32: Copy + Send + Ord + Sync>(mut grid: &Vec<Vec<u32>>, num: u32, ro
     }
 
     let size = grid[0].len();       //grid size i.e. 9
-
-    //row check
-    // if grid[row].contains(&num){            
-    //     return false
-    // }
-   // if row_check(grid, num, row, col){ return false}
-
-    //col check
-    // for j in 0..size{
-    //     if grid[j][col] == num{             //if the number already exists within that column then return false
-    //         return false
-    //     }
-    // }
-   // if col_check(grid, num, row, col){ return false}
-    
-
-
     let rowChop = row - row%3;      //3*3 block
     let colChop = col - col%3;
     // e.g. row = 2 col = 5
@@ -116,7 +73,7 @@ fn is_safe<u32: Copy + Send + Ord + Sync>(mut grid: &Vec<Vec<u32>>, num: u32, ro
     return true;
 }
 
-pub fn solveAllSoln(grid: &mut Vec<Vec<u32>>, mut row: usize, mut col: usize,  resultSet: &CHashMap<Vec<Vec<u32>>, u32> ){
+pub fn solveAllSoln(grid: &mut Vec<Vec<u32>>, mut row: usize, mut col: usize,  resultSet: & CHashMap<Vec<Vec<u32>>, u32> ){
     let grid_size: usize = grid.len();
     // base case check if we reach the last cell i.e. row = 8 and col = 8
     if row == grid_size-1 && col == grid_size-1 { //grid_size = 8 for 9*9
@@ -147,22 +104,11 @@ pub fn solveAllSoln(grid: &mut Vec<Vec<u32>>, mut row: usize, mut col: usize,  r
         return solveAllSoln(grid, row+1, 0, resultSet);
     }
     if grid[row][col] == 0{    //if cell is empty then check for all possible number
-        //
-        // for num in 1..=9 {
-        //     if is_safe(grid, num, row, col){
-        //         grid[row][col] = num;
-        //
-        //         solveAllSoln(grid, row, col+1, resultSet);
-        //         grid[row][col] = 0;
-        //     }
-        // }
-
-
+       
         (1..=9).into_par_iter().for_each(|num| {
 
             if is_safe(grid, num, row, col){
                 let mut newgrid = grid.clone();
-                //let mut newResultSet = resultSet.clone();
                 newgrid[row][col] = num;
 
 
@@ -171,17 +117,7 @@ pub fn solveAllSoln(grid: &mut Vec<Vec<u32>>, mut row: usize, mut col: usize,  r
             }
         });
     }
-        // else if grid[row][col] == 0 && row > 4{
-        //     (1..=9).into_iter().for_each(|num| {
-        //         if is_safe(grid, num, row, col){
-        //             grid[row][col] = num;
-        //             solveAllSoln(grid, row, col+1, resultSet);
-        //             grid[row][col] = 0; // reset the grid[row][col] to 0 (unfilled) so, that we can search for other possible soln
-        //         }
-        //     }
-        //     )
-        // }
-
+     
     else {
         solveAllSoln(grid, row, col+1, resultSet);
     }
