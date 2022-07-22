@@ -70,7 +70,7 @@ fn runApiSolver(path: String) -> (Duration, usize){
 
 fn main() -> io::Result<()> {
 
-    let path = "Test//map2.txt";
+    let path = "Test//map3.txt";
     
     let file = File::open(path).unwrap();
     let reader = BufReader::new(file);
